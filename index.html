@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тугыр — сервис фильтрации интернета</title>
+<meta name="description" content="Тугыр — сервис фильтрации интернета. Убираем трекеры и рекламу на твоих устройствах. Доступ по приглашению.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#A9C6DA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#08182A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<style>
+/* ── токены ─────────────────────────────────────────────── */
+:root{
+  --ink:#07203D;
+  --ink-soft:#2F5580;
+  --gold:#C98A0E;
+  --ground:#F4F9FD;
+  --seam:#CCE0EF;
+  --img-bg:#8FACC6;
+  --pad:clamp(1rem,5vw,4.5rem);
+  --font-display:ui-rounded,"SF Pro Rounded","Segoe UI Variable Display",system-ui,-apple-system,sans-serif;
+  --font-text:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#EAF2FB;
+    --ink-soft:#AFCAE6;
+    --gold:#F2BC46;
+    --ground:#06121F;
+    --seam:#08182A;
+    --img-bg:#2B4460;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--font-text);
+  color:var(--ink);
+  background:var(--ground);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+.wrap{max-width:1440px;padding-inline:var(--pad)}
+
+/* ── шапка ──────────────────────────────────────────────── */
+.mark{
+  position:absolute;top:clamp(1.1rem,3vw,2.2rem);left:0;right:0;
+  z-index:4;padding-inline:var(--pad);
+}
+.mark b{
+  font-family:var(--font-display);
+  font-weight:700;font-size:1.35rem;letter-spacing:.06em;
+}
+
+/* ── первый экран ───────────────────────────────────────── */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:grid;align-content:center;
+  padding-block:clamp(5rem,12vh,7rem) clamp(2rem,6vh,4rem);
+  background:var(--seam);
+}
+.stage{position:absolute;inset:0;overflow:hidden;background:var(--img-bg)}
+.stage img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:12% 46%;
+  animation:breathe 22s ease-in-out infinite alternate;
+}
+@keyframes breathe{from{transform:scale(1)}to{transform:scale(1.03)}}
+/* затемнение только в тёмной теме */
+.veil{position:absolute;inset:0;z-index:1}
+@media (prefers-color-scheme: dark){
+  .veil{background:linear-gradient(90deg,rgba(4,12,24,.6) 0%,rgba(4,12,24,.52) 30%,rgba(4,12,24,.4) 54%,rgba(4,12,24,.4) 100%)}
+}
+/* низ картинки уходит в фон без шва */
+.seam{
+  position:absolute;left:0;right:0;bottom:-1px;z-index:3;
+  height:16%;
+  background:linear-gradient(to bottom,rgba(204,224,239,0) 0%,var(--seam) 86%);
+}
+@media (prefers-color-scheme: dark){
+  .seam{background:linear-gradient(to bottom,rgba(8,24,42,0) 0%,var(--seam) 86%)}
+}
+.hero__copy{position:relative;z-index:5;width:100%;justify-self:start}
+h1{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:clamp(2.3rem,3.9vw,4.3rem);
+  line-height:.95;
+  letter-spacing:-.03em;
+  margin:0 0 clamp(.9rem,2vw,1.4rem);
+  max-width:14ch;
+}
+.lede{
+  margin:0;
+  font-size:clamp(1.02rem,1.35vw,1.26rem);
+  line-height:1.45;
+  max-width:24ch;
+  font-weight:500;
+  color:var(--ink);
+}
+
+/* ── второй экран ───────────────────────────────────────── */
+.ground{
+  background:linear-gradient(180deg,var(--seam) 0,var(--ground) 26%);
+  padding-block:clamp(2.8rem,7vw,5.2rem) clamp(1.6rem,4vw,2.6rem);
+}
+.points{
+  list-style:none;margin:0 0 clamp(2.8rem,6vw,4.4rem);padding:0;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(1.7rem,3.6vw,3rem);
+}
+.points li{margin:0;max-width:29ch;font-size:clamp(1.02rem,1.32vw,1.18rem);line-height:1.45}
+.closing{
+  display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
+  gap:clamp(1.8rem,4vw,3.4rem);align-items:start;
+}
+.legend{
+  font-family:var(--font-display);
+  font-size:clamp(1.15rem,1.9vw,1.55rem);
+  line-height:1.46;font-weight:500;
+  max-width:33ch;margin:0;
+}
+.invite{
+  margin:.35rem 0 0;
+  font-size:clamp(1.02rem,1.35vw,1.16rem);
+  max-width:30ch;color:var(--ink-soft);
+  padding-top:1.3rem;border-top:1.5px solid var(--gold);
+}
+footer{
+  padding:clamp(2.4rem,6vw,4rem) 0 clamp(1.6rem,4vw,2.4rem);
+  font-size:.86rem;color:var(--ink-soft);opacity:.85;
+}
+
+@media (min-width:901px) and (max-width:1200px){
+  .stage img{object-position:16% 46%}
+}
+
+/* ── планшет и телефон ──────────────────────────────────── */
+@media (max-width:900px){
+  .ground{padding-top:clamp(2rem,5vw,3rem)}
+  .hero{
+    min-height:0;display:block;
+    padding:0 0 clamp(1.1rem,3.5vw,1.8rem);
+  }
+  .stage{position:relative;inset:auto;height:58svh;min-height:330px}
+  .stage img{object-position:61% 45%}
+  .seam{height:24%}
+  .hero__copy{padding-top:clamp(1.2rem,4vw,2rem)}
+  h1{font-size:clamp(2.3rem,9vw,3.4rem);max-width:none}
+  .lede{max-width:32ch}
+  .points{grid-template-columns:1fr;gap:1.4rem}
+  .points li{max-width:36ch}
+  .closing{grid-template-columns:1fr;gap:2rem}
+  .legend{max-width:34ch}
+}
+@media (max-width:900px) and (max-height:640px){
+  .stage{height:64svh}
+}
+
+/* ── меньше движения ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  .stage img{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="mark wrap"><b>Тугыр</b></header>
+
+<main>
+  <section class="hero">
+    <div class="stage">
+      <picture>
+        <source type="image/webp" srcset="assets/hero-1280.webp 1280w, assets/hero-2560.webp 2560w" sizes="100vw">
+        <img src="assets/hero-1280.jpg"
+             srcset="assets/hero-1280.jpg 1280w, assets/hero-2560.jpg 2560w" sizes="100vw"
+             width="2560" height="1428" fetchpriority="high" decoding="async"
+             alt="Тугыр — персонаж в скафандре парит рядом с беркутом, садящимся на резной насест; рекламные плашки рассыпаются о защитный купол">
+      </picture>
+      <span class="veil" aria-hidden="true"></span>
+      <span class="seam" aria-hidden="true"></span>
+    </div>
+
+    <div class="hero__copy wrap">
+      <h1>Сервис<br>фильтрации<br>интернета</h1>
+      <p class="lede">Убираем трекеры и рекламу на твоих устройствах.</p>
+    </div>
+  </section>
+
+  <section class="ground">
+    <div class="wrap">
+      <ul class="points">
+        <li>Меньше рекламы — на всём устройстве: телефон, компьютер, телевизор. Не только в браузере</li>
+        <li>Трекеры не ходят за тобой по приложениям</li>
+        <li>Фильтруем на уровне сети. Рекламу, которую площадка встраивает прямо в своё видео или ленту, это не уберёт — говорим сразу</li>
+        <li>Живой человек на связи, если что-то не работает</li>
+      </ul>
+
+      <div class="closing">
+        <p class="legend">Тугы́р — рифмуется с «мир». По-казахски «тұғыр» — опора, насест, на который садится ловчая птица. Мы — опора для твоего интернета.</p>
+        <p class="invite">Доступ по приглашению. Попасть можно только от того, кто уже с нами.</p>
+      </div>
+
+      <footer>© Тугыр</footer>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
