@@ -52,11 +52,11 @@ body{
 img{max-width:100%;display:block}
 .wrap{max-width:1440px;padding-inline:var(--pad)}
 
-/* ── имя над заголовком: одна группа, одна ось ───────────── */
+/* ── шапка: имя на той же левой оси, что заголовок ────────── */
 .mark{
-  margin:0 0 clamp(.7rem,1.6vw,1.1rem);
+  position:absolute;top:clamp(1.1rem,3vw,2.2rem);left:0;right:0;z-index:6;
   font-family:var(--font-display);
-  font-weight:700;font-size:clamp(1.05rem,1.5vw,1.35rem);letter-spacing:.06em;
+  font-weight:700;font-size:1.35rem;letter-spacing:.06em;
 }
 
 /* ── первый экран ───────────────────────────────────────── */
@@ -137,7 +137,7 @@ h1{
   font-size:clamp(2.3rem,3.9vw,4.3rem);
   line-height:.95;
   letter-spacing:-.03em;
-  margin:0 0 clamp(.9rem,2vw,1.4rem);
+  margin:0 0 clamp(.9rem,2vw,1.4rem) -.035em; /* оптика: зазор крупной «С» слева */
   max-width:14ch;
 }
 .lede{
@@ -202,6 +202,7 @@ footer{
 </style>
 </head>
 <body>
+<header class="mark wrap">Тугыр</header>
 
 
 <main>
@@ -239,7 +240,6 @@ footer{
     </div>
 
     <div class="hero__copy wrap">
-      <p class="mark">Тугыр</p>
       <h1>Сервис<br>фильтрации<br>интернета</h1>
       <p class="lede">Убираем трекеры и рекламу на твоих устройствах.</p>
     </div>
