@@ -86,33 +86,67 @@ img{max-width:100%;display:block}
 
 /* беркут: рамка посадки — его место на исходном кадре */
 .seat{
-  position:absolute;left:34.13%;top:8.98%;width:26.87%;
-  transform-origin:74% 88%;
+  position:absolute;left:33.96%;top:8.5%;width:26.73%;
+  aspect-ratio:1100 / 1016;
+  transform-origin:69% 92%;
   animation:land 6.5s cubic-bezier(.33,.02,.29,1) .35s both;
 }
-.wingbeat{transform-origin:74% 88%;animation:beat .52s ease-in-out .35s 12 alternate both}
-.eagle{width:100%;height:auto}
+.pose-land{position:absolute;left:0;top:0;right:0;bottom:0}
+.seat img{position:absolute;left:0;top:0;width:100%;height:auto}
+.w-far{transform-origin:70.8% 51.8%;
+  animation:farbeat 6.5s linear .35s both, faridle 9s ease-in-out 7.2s infinite}
+.w-near{transform-origin:66.3% 57%;
+  animation:nearbeat 6.5s linear .35s both, nearidle 9s ease-in-out 7.2s infinite}
+/* полётная поза: своя рамка, совмещена с посадочной по голове и груди */
+.pose-fly{left:-2.09%;top:-21.56%;animation:poseswapa .5s .35s 8 both}
+.pose-land{animation:poseswapb .5s .35s 8 both}
+
 @keyframes land{
-  0%{transform:translate(-239%,-84%) scale(.6) rotate(7deg);opacity:.2}
+  0%{transform:translate(-239%,-76%) scale(.6) rotate(7deg);opacity:.2}
   9%{opacity:.9}
-  36%{transform:translate(-152%,-47%) scale(.72) rotate(5deg);opacity:1}
-  62%{transform:translate(-85%,-21%) scale(.85) rotate(2deg)}
+  36%{transform:translate(-152%,-44%) scale(.72) rotate(5deg);opacity:1}
+  62%{transform:translate(-85%,-20%) scale(.85) rotate(2deg)}
   81%{transform:translate(-33%,-5%) scale(.95) rotate(-5deg)}
   91%{transform:translate(-8%,2%) scale(.995) rotate(-13deg)}
-  96%{transform:translate(0,1.8%) scale(1) rotate(-3deg)}
+  96%{transform:translate(0,1.7%) scale(1) rotate(-3deg)}
   100%{transform:translate(0,0) scale(1) rotate(0deg)}
 }
-@keyframes beat{
-  from{transform:scaleY(1) scaleX(1) rotate(0deg)}
-  to{transform:scaleY(.9) scaleX(1.03) rotate(1.6deg)}
+/* до 60% пути — крылья в нижнем положении (чередуется с полётной позой),
+   дальше торможение: махи с растущей амплитудой и затуханием после касания */
+@keyframes farbeat{
+  0%,61.5%{transform:rotate(-10deg)}
+  70%{transform:rotate(12deg)}
+  79%{transform:rotate(-14deg)}
+  88%{transform:rotate(10deg)}
+  94%{transform:rotate(-6deg)}
+  97.5%{transform:rotate(3deg)}
+  100%{transform:rotate(0deg)}
 }
-/* редкое шевеление после посадки */
-.idle{transform-origin:74% 88%;animation:idle 9s ease-in-out 7.4s infinite}
-@keyframes idle{
-  0%,86%,100%{transform:rotate(0deg)}
-  91%{transform:rotate(-1.4deg)}
-  95%{transform:rotate(.6deg)}
+@keyframes nearbeat{
+  0%,61.5%{transform:rotate(12deg)}
+  70%{transform:rotate(-12deg)}
+  79%{transform:rotate(14deg)}
+  88%{transform:rotate(-10deg)}
+  94%{transform:rotate(6deg)}
+  97.5%{transform:rotate(-3deg)}
+  100%{transform:rotate(0deg)}
 }
+/* на узком кадре левый край обрезан — заход сверху-справа */
+@keyframes landm{
+  0%{transform:translate(78%,-155%) scale(.62) rotate(10deg);opacity:.2}
+  9%{opacity:.9}
+  36%{transform:translate(52%,-95%) scale(.72) rotate(8deg);opacity:1}
+  62%{transform:translate(30%,-52%) scale(.85) rotate(5deg)}
+  81%{transform:translate(12%,-18%) scale(.95) rotate(-4deg)}
+  91%{transform:translate(3%,2%) scale(.995) rotate(-13deg)}
+  96%{transform:translate(0,1.7%) scale(1) rotate(-3deg)}
+  100%{transform:translate(0,0) scale(1) rotate(0deg)}
+}
+@keyframes poseswapa{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+@keyframes poseswapb{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+/* после посадки — раз в 9 с один ленивый мах */
+@keyframes faridle{0%,88%,100%{transform:rotate(0deg)}92%{transform:rotate(-4deg)}96%{transform:rotate(2deg)}}
+@keyframes nearidle{0%,88%,100%{transform:rotate(0deg)}92%{transform:rotate(4deg)}96%{transform:rotate(-2deg)}}
 /* тёмная тема: притеняем только левую часть, сцена справа остаётся яркой */
 .veil{position:absolute;inset:0;z-index:1}
 @media (prefers-color-scheme: dark){
@@ -164,7 +198,7 @@ h1{
   font-size:clamp(1.22rem,1.95vw,1.6rem);
   line-height:1.4;
   font-weight:500;
-  max-width:34ch;
+  max-width:42ch;
 }
 .q{display:block;font-weight:650;margin-bottom:.3em}
 footer{
@@ -182,9 +216,10 @@ footer{
   .frame{
     width:max(100vw, calc(58svh * 16 / 9));
     height:max(56.25vw, 58svh);
-    left:calc((100vw - max(100vw, calc(58svh * 16 / 9))) * .61);
+    left:calc((100vw - max(100vw, calc(58svh * 16 / 9))) * .59);
     top:calc((58svh - max(56.25vw, 58svh)) * .45);
   }
+  .seat{animation-name:landm}
   .seam{height:24%}
   .hero__copy{padding-top:clamp(1.2rem,4vw,2rem)}
   h1{font-size:clamp(2.3rem,9vw,3.4rem);max-width:none}
@@ -197,7 +232,8 @@ footer{
 
 /* ── меньше движения ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce){
-  .seat,.wingbeat,.idle{animation:none}
+  .seat,.w-far,.w-near,.pose-land{animation:none}
+  .pose-fly{display:none}
 }
 </style>
 </head>
@@ -217,14 +253,24 @@ footer{
                alt="Тугыр — персонаж в скафандре парит рядом с беркутом, садящимся на резной насест; рекламные плашки рассыпаются о защитный купол">
         </picture>
         <div class="seat">
-          <div class="idle">
-            <div class="wingbeat">
-              <img class="eagle" src="assets/eagle-land.webp"
-                   srcset="assets/eagle-land-half.webp 554w, assets/eagle-land.webp 1109w"
-                   sizes="(max-width:900px) 60vw, 30vw"
-                   width="1109" height="959" decoding="async" alt="">
-            </div>
+          <div class="pose-land">
+            <img class="w-far" src="assets/eagle-far.webp"
+                 srcset="assets/eagle-far-half.webp 560w, assets/eagle-far.webp 1100w"
+                 sizes="(max-width:900px) 60vw, 30vw"
+                 width="1100" height="1016" decoding="async" alt="">
+            <img class="body" src="assets/eagle-body.webp"
+                 srcset="assets/eagle-body-half.webp 560w, assets/eagle-body.webp 1100w"
+                 sizes="(max-width:900px) 60vw, 30vw"
+                 width="1100" height="1016" decoding="async" alt="">
+            <img class="w-near" src="assets/eagle-near.webp"
+                 srcset="assets/eagle-near-half.webp 560w, assets/eagle-near.webp 1100w"
+                 sizes="(max-width:900px) 60vw, 30vw"
+                 width="1100" height="1016" decoding="async" alt="">
           </div>
+          <img class="pose-fly" src="assets/eagle-fly.webp"
+               srcset="assets/eagle-fly-half.webp 560w, assets/eagle-fly.webp 1100w"
+               sizes="(max-width:900px) 60vw, 30vw"
+               width="1100" height="1097" decoding="async" fetchpriority="low" alt="">
         </div>
       </div>
 
