@@ -4,21 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Тугыр — сервис фильтрации интернета</title>
-<meta name="description" content="Тугыр — сервис фильтрации интернета. Убираем трекеры и рекламу на твоих устройствах. Доступ по приглашению.">
+<meta name="description" content="Сервис фильтрации интернета. Убираем трекеры и рекламу.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#A9C6DA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#08182A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Тугыр — сервис фильтрации интернета">
+<meta property="og:description" content="Сервис фильтрации интернета. Убираем трекеры и рекламу.">
+<meta property="og:image" content="https://tugyr.ru/assets/hero-1280.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Тугыр — сервис фильтрации интернета">
+<meta name="twitter:description" content="Сервис фильтрации интернета. Убираем трекеры и рекламу.">
+<meta name="twitter:image" content="https://tugyr.ru/assets/hero-1280.jpg">
 <link rel="icon" href="assets/favicon.png" type="image/png">
 <style>
 /* ── токены ─────────────────────────────────────────────── */
 :root{
   --ink:#07203D;
   --ink-soft:#2F5580;
-  --gold:#C98A0E;
   --ground:#F4F9FD;
   --seam:#CCE0EF;
   --img-bg:#8FACC6;
   --pad:clamp(1rem,5vw,4.5rem);
+  --step:clamp(1.7rem,3.4vw,2.6rem);
   --font-display:ui-rounded,"SF Pro Rounded","Segoe UI Variable Display",system-ui,-apple-system,sans-serif;
   --font-text:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
 }
@@ -26,7 +34,6 @@
   :root{
     --ink:#EAF2FB;
     --ink-soft:#AFCAE6;
-    --gold:#F2BC46;
     --ground:#06121F;
     --seam:#08182A;
     --img-bg:#2B4460;
@@ -64,16 +71,54 @@ img{max-width:100%;display:block}
   background:var(--seam);
 }
 .stage{position:absolute;inset:0;overflow:hidden;background:var(--img-bg)}
-.stage img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:12% 46%;
-  animation:breathe 22s ease-in-out infinite alternate;
+/* рамка 16:9 кадрируется как object-fit:cover с позицией 12% 46% */
+.frame{
+  position:absolute;
+  width:max(100vw, calc(100svh * 16 / 9));
+  height:max(56.25vw, 100svh);
+  left:calc((100vw - max(100vw, calc(100svh * 16 / 9))) * .12);
+  top:calc((100svh - max(56.25vw, 100svh)) * .46);
 }
-@keyframes breathe{from{transform:scale(1)}to{transform:scale(1.03)}}
-/* затемнение только в тёмной теме */
+@media (min-width:901px) and (max-width:1200px){
+  .frame{left:calc((100vw - max(100vw, calc(100svh * 16 / 9))) * .16)}
+}
+.frame>picture img{width:100%;height:100%}
+
+/* беркут: рамка посадки — его место на исходном кадре */
+.seat{
+  position:absolute;left:34.13%;top:8.98%;width:26.87%;
+  transform-origin:74% 88%;
+  animation:land 6.5s cubic-bezier(.33,.02,.29,1) .35s both;
+}
+.wingbeat{transform-origin:74% 88%;animation:beat .52s ease-in-out .35s 12 alternate both}
+.eagle{width:100%;height:auto}
+@keyframes land{
+  0%{transform:translate(-239%,-84%) scale(.6) rotate(7deg);opacity:.2}
+  9%{opacity:.9}
+  36%{transform:translate(-152%,-47%) scale(.72) rotate(5deg);opacity:1}
+  62%{transform:translate(-85%,-21%) scale(.85) rotate(2deg)}
+  81%{transform:translate(-33%,-5%) scale(.95) rotate(-5deg)}
+  91%{transform:translate(-8%,2%) scale(.995) rotate(-13deg)}
+  96%{transform:translate(0,1.8%) scale(1) rotate(-3deg)}
+  100%{transform:translate(0,0) scale(1) rotate(0deg)}
+}
+@keyframes beat{
+  from{transform:scaleY(1) scaleX(1) rotate(0deg)}
+  to{transform:scaleY(.9) scaleX(1.03) rotate(1.6deg)}
+}
+/* редкое шевеление после посадки */
+.idle{transform-origin:74% 88%;animation:idle 9s ease-in-out 7.4s infinite}
+@keyframes idle{
+  0%,86%,100%{transform:rotate(0deg)}
+  91%{transform:rotate(-1.4deg)}
+  95%{transform:rotate(.6deg)}
+}
+/* тёмная тема: притеняем только левую часть, сцена справа остаётся яркой */
 .veil{position:absolute;inset:0;z-index:1}
 @media (prefers-color-scheme: dark){
-  .veil{background:linear-gradient(90deg,rgba(4,12,24,.6) 0%,rgba(4,12,24,.52) 30%,rgba(4,12,24,.4) 54%,rgba(4,12,24,.4) 100%)}
+  .veil{background:linear-gradient(90deg,
+    rgba(4,12,24,.74) 0%,rgba(4,12,24,.70) 20%,
+    rgba(4,12,24,.44) 34%,rgba(4,12,24,0) 46%)}
 }
 /* низ картинки уходит в фон без шва */
 .seam{
@@ -84,6 +129,7 @@ img{max-width:100%;display:block}
 @media (prefers-color-scheme: dark){
   .seam{background:linear-gradient(to bottom,rgba(8,24,42,0) 0%,var(--seam) 86%)}
 }
+
 .hero__copy{position:relative;z-index:5;width:100%;justify-self:start}
 h1{
   font-family:var(--font-display);
@@ -100,62 +146,50 @@ h1{
   line-height:1.45;
   max-width:24ch;
   font-weight:500;
-  color:var(--ink);
 }
 
-/* ── второй экран ───────────────────────────────────────── */
+/* ── второй экран: одна колонка, один ритм ──────────────── */
 .ground{
   background:linear-gradient(180deg,var(--seam) 0,var(--ground) 26%);
-  padding-block:clamp(2.8rem,7vw,5.2rem) clamp(1.6rem,4vw,2.6rem);
+  padding-block:clamp(3rem,7vw,5rem) clamp(1.6rem,4vw,2.6rem);
 }
-.points{
-  list-style:none;margin:0 0 clamp(2.8rem,6vw,4.4rem);padding:0;
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:clamp(1.7rem,3.6vw,3rem);
+.story p{
+  margin:0 0 var(--step);
+  max-width:62ch;
+  font-size:clamp(1.04rem,1.26vw,1.16rem);
+  line-height:1.55;
 }
-.points li{margin:0;max-width:29ch;font-size:clamp(1.02rem,1.32vw,1.18rem);line-height:1.45}
-.closing{
-  display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-  gap:clamp(1.8rem,4vw,3.4rem);align-items:start;
-}
-.legend{
+.story p:first-child{
   font-family:var(--font-display);
-  font-size:clamp(1.15rem,1.9vw,1.55rem);
-  line-height:1.46;font-weight:500;
-  max-width:33ch;margin:0;
+  font-size:clamp(1.22rem,1.95vw,1.6rem);
+  line-height:1.4;
+  font-weight:500;
+  max-width:34ch;
 }
-.invite{
-  margin:.35rem 0 0;
-  font-size:clamp(1.02rem,1.35vw,1.16rem);
-  max-width:30ch;color:var(--ink-soft);
-  padding-top:1.3rem;border-top:1.5px solid var(--gold);
-}
+.q{display:block;font-weight:650;margin-bottom:.3em}
 footer{
-  padding:clamp(2.4rem,6vw,4rem) 0 clamp(1.6rem,4vw,2.4rem);
+  margin:0;padding-top:clamp(1rem,2vw,1.6rem);
   font-size:.86rem;color:var(--ink-soft);opacity:.85;
 }
 
-@media (min-width:901px) and (max-width:1200px){
-  .stage img{object-position:16% 46%}
-}
-
-/* ── планшет и телефон ──────────────────────────────────── */
-@media (max-width:900px){
-  .ground{padding-top:clamp(2rem,5vw,3rem)}
+/* ── узкое или высокое окно: сцена сверху, текст под ней ── */
+@media (max-width:900px), (max-aspect-ratio: 27/20){
   .hero{
     min-height:0;display:block;
     padding:0 0 clamp(1.1rem,3.5vw,1.8rem);
   }
   .stage{position:relative;inset:auto;height:58svh;min-height:330px}
-  .stage img{object-position:61% 45%}
+  .frame{
+    width:max(100vw, calc(58svh * 16 / 9));
+    height:max(56.25vw, 58svh);
+    left:calc((100vw - max(100vw, calc(58svh * 16 / 9))) * .61);
+    top:calc((58svh - max(56.25vw, 58svh)) * .45);
+  }
   .seam{height:24%}
   .hero__copy{padding-top:clamp(1.2rem,4vw,2rem)}
   h1{font-size:clamp(2.3rem,9vw,3.4rem);max-width:none}
   .lede{max-width:32ch}
-  .points{grid-template-columns:1fr;gap:1.4rem}
-  .points li{max-width:36ch}
-  .closing{grid-template-columns:1fr;gap:2rem}
-  .legend{max-width:34ch}
+  .ground{padding-top:clamp(2rem,5vw,3rem)}
 }
 @media (max-width:900px) and (max-height:640px){
   .stage{height:64svh}
@@ -163,7 +197,7 @@ footer{
 
 /* ── меньше движения ────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce){
-  .stage img{animation:none}
+  .seat,.wingbeat,.idle{animation:none}
 }
 </style>
 </head>
@@ -174,13 +208,26 @@ footer{
 <main>
   <section class="hero">
     <div class="stage">
-      <picture>
-        <source type="image/webp" srcset="assets/hero-1280.webp 1280w, assets/hero-2560.webp 2560w" sizes="100vw">
-        <img src="assets/hero-1280.jpg"
-             srcset="assets/hero-1280.jpg 1280w, assets/hero-2560.jpg 2560w" sizes="100vw"
-             width="2560" height="1428" fetchpriority="high" decoding="async"
-             alt="Тугыр — персонаж в скафандре парит рядом с беркутом, садящимся на резной насест; рекламные плашки рассыпаются о защитный купол">
-      </picture>
+      <div class="frame">
+        <picture>
+          <source type="image/webp" srcset="assets/scene-1280.webp 1280w, assets/scene-2560.webp 2560w" sizes="100vw">
+          <img src="assets/scene-1280.jpg"
+               srcset="assets/scene-1280.jpg 1280w, assets/scene-2560.jpg 2560w" sizes="100vw"
+               width="2560" height="1428" fetchpriority="high" decoding="async"
+               alt="Тугыр — персонаж в скафандре парит рядом с беркутом, садящимся на резной насест; рекламные плашки рассыпаются о защитный купол">
+        </picture>
+        <div class="seat">
+          <div class="idle">
+            <div class="wingbeat">
+              <img class="eagle" src="assets/eagle-land.webp"
+                   srcset="assets/eagle-land-half.webp 554w, assets/eagle-land.webp 1109w"
+                   sizes="(max-width:900px) 60vw, 30vw"
+                   width="1109" height="959" decoding="async" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+
       <span class="veil" aria-hidden="true"></span>
       <span class="seam" aria-hidden="true"></span>
     </div>
@@ -192,18 +239,14 @@ footer{
   </section>
 
   <section class="ground">
-    <div class="wrap">
-      <ul class="points">
-        <li>Меньше рекламы — на всём устройстве: телефон, компьютер, телевизор. Не только в браузере</li>
-        <li>Трекеры не ходят за тобой по приложениям</li>
-        <li>Фильтруем на уровне сети. Рекламу, которую площадка встраивает прямо в своё видео или ленту, это не уберёт — говорим сразу</li>
-        <li>Живой человек на связи, если что-то не работает</li>
-      </ul>
+    <div class="wrap story">
+      <p>Меньше рекламы и трекеров везде: на телефоне, компьютере, в телевизоре. Фильтруем на уровне сети, значит уберём трекеры и рекламу, встраиваемые площадкой. Вживлённую в видео — не уберём.</p>
 
-      <div class="closing">
-        <p class="legend">Тугы́р — рифмуется с «мир». По-казахски «тұғыр» — опора, насест, на который садится ловчая птица. Мы — опора для твоего интернета.</p>
-        <p class="invite">Доступ по приглашению. Попасть можно только от того, кто уже с нами.</p>
-      </div>
+      <p><span class="q">Что это значит для тебя?</span>Трекеры реже догоняют тебя персонализированной рекламой и меньше о тебе знают, а ты реже видишь то, что хотел бы кто-то другой, чтоб ты видел.</p>
+
+      <p>Тугы́р — рифмуется с «мир». По-казахски «тұғыр» — опора, насест, на который садится ловчая птица. Мы — опора для твоего интернета.</p>
+
+      <p>Доступ по приглашению. Попасть можно только от того, кто уже с нами. Живой человек на связи, если что-то не работает.</p>
 
       <footer>© Тугыр</footer>
     </div>
